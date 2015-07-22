@@ -1,0 +1,99 @@
+* {margin: 0 auto; padding: 0; border: 0; text-decoration: none;}
+
+body {
+	width: 100%;
+	height: 100%;
+	font-family: 'Raleway';
+	text-align: center;
+	background-image: url(../img/background.jpg);
+	background-size: 100% auto;
+}
+
+h1 {
+	font-weight: 900;
+	padding: 40px 0 10px 0;
+	font-size: 100px;
+	color: #ffc107;
+}
+
+.subtitle {
+	clear: both;
+	padding-bottom: 50px;
+	color: #ffffff;
+	font-weight: 900;
+	font-size: 28px;
+}
+
+.explanation {
+	font-size: 24px;
+	font-weight: 500;
+	color: #ffffff;
+	margin-bottom: 25px;
+
+}
+
+.wrapper {
+	width: 100%;
+	max-width: 975px;
+	z-index: 12;
+	position: relative;
+	padding: 20px;
+}
+
+input, .button-submit {
+	width: 100%;
+	height: 45px;
+	margin-top: 10px;
+	border-radius: 5px;
+	font-weight: 500;
+	font-size: 21px;
+	font-family: 'Ralwetay';
+}
+
+.input-text {
+	clear: both;
+	padding-left: 20px;
+	font-size: 20px;
+	outline: none;
+	box-shadow: inset 0px 0px 6px 1.5px rgba(1,1,1,0.3);
+	font-family: 'Raleway';
+}
+
+.input-text:focus {
+	box-shadow: inset 0px 0px 6px 3px rgba(1,1,1,0.3);
+}
+
+.progress-button.button-submit {
+	background-color: #ffc107;
+	font-family: 'Raleway';
+	color: #ffffff;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: 900;
+	cursor: pointer;
+}
+
+.progress-button.button-submit .progress-inner {
+	background: #cb980b;
+}
+
+.progress-button.button-submit .content::before, .progress-button.button-submit .content::after {
+	color: #cb980b;
+}
+
+.progress-button.button-submit.active {
+	width: 45px;
+	color: #ffc107;
+	border-radius: 100%;
+}
+
+.gui-overlay {
+	background-image: linear-gradient(to bottom,rgba(0,0,0,0.8) 0,rgba(0,0,0,0.8) 15%,rgba(0,0,0,0.7) 65%,rgba(0,0,0,0.6) 90%,rgba(0,0,0,0) 100%);
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 11;
+	opacity: 1;
+}

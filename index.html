@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Nomes no mural</title>
+ 		<meta charset="UTF-8">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='http://fonts.googleapis.com/css?family=Raleway:500,600,900,800,400,700,100,200,300' rel='stylesheet' type='text/css' />
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="static/css/component.css" />
+		<script src="static/js/modernizr.custom.js"></script>
+		<script src="http://html2canvas.hertzen.com/build/html2canvas.js"></script>
+		<script src="https://cdn.jsdelivr.net/ace/1.1.01/noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="static/js/jspdf.js"></script>
+		<script type="text/javascript" src="static/js/filesaver.js"></script>
+		<script type="text/javascript" src="js/editor.js"></script>
+		<script type="text/javascript" src="js/vip.js"></script>
+		<script src="static/js/classie.js"></script>
+		<script src="static/js/progressButton.js"></script>
+		<script>
+			var progress = 0,
+				invalid = false;
+
+		    (function(d, s, id){
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) {return;}
+				js = d.createElement(s); js.id = id;
+				js.src = "http://connect.facebook.net/en_US/sdk.js";
+				fjs.parentNode.insertBefore(js, fjs);
+		    }(document, 'script', 'facebook-jssdk'));
+
+		    window.fbAsyncInit = function() {
+		        FB.init({
+		          appId      : '1553906604861504',
+		          xfbml      : true,
+		          version    : 'v2.3'
+		        });
+
+		        vip.init();
+		        
+		        [].slice.call( document.querySelectorAll('.progress-button')).forEach(function(bttn) {
+					new ProgressButton(bttn, {
+						callback: function(instance) {
+							var interval = setInterval(function() {
+								progress = Math.min(progress + Math.random() * 0.02, 1);
+								instance._setProgress(progress);
+
+								if(progress === 1) {
+									instance._stop(1);
+									progress = 0;
+									clearInterval(interval);
+								}
+								if(invalid === true) {
+									instance._stop(-1);
+									progress = 0;
+									clearInterval(interval);
+									invalid = false;
+								}
+							}, 200);
+						}
+					});
+				});
+		    };
+	    </script>
+	</head>
+
+	<body>
+		<div class="wrapper">
+			<h1>NOMES NO MURAL</h1>
+			<p class="subtitle">ESTÁ FAZENDO UMA FESTA, CRIOU UM EVENTO NO FACEBOOK E AGORA TEM QUE COPIAR NOME POR NOME DO MURAL?</p>
+			<p class="explanation">Perda de tempo! É só colar o link do seu evento nesse campo aqui embaixo que a gente te dá uma lista com todos os nomes inseridos lá! Pratico, né?</p>
+			<input type="text" value="" name="event" id="event" class="input-text" placeholder="Cole o link do seu evento aqui" />
+			<button class="progress-button button-submit" data-style="fill" data-horizontal>FAÇA SUA LISTA AGORA</button>
+			<div id="editor" class="bypass"></div>
+		</div>
+		<div class="gui-overlay"></div>
+	</body>
+</html>
