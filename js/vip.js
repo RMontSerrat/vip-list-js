@@ -160,6 +160,13 @@
 		}
 	},
 
+	replaceAll: function replaceAll(string, token, newtoken) {
+		while (string.indexOf(token) != -1) {
+				string = string.replace(token, newtoken);
+		}
+		return string;
+	},
+
 	/**
 	 * get the event posts
 	 * @return {void}
@@ -173,33 +180,33 @@
         	return;
         }
 		FB.api(
-		    "/"+id, {
-				access_token: access_token
-		    },
-		    function (response) {
-		      	if (response && !response.error) {
-							var name = response.name,
-									start = new Date(response.start_time),
-									end = new Date(response.end_time);
-							FB.api(
-								id+"/feed", {
-									access_token: access_token,
-									fields: 'message, type, updated_time',
-									limit: 5000
-								},
-								function (data) {
-									if (data && !data.error) {
-								      var nameList = self.filterMessages(data, self.checkDate(end, start));
-									jsPDFEditor.init(nameList);
-								} else {
-									self.errorMessage();
-								}
-					    }
+	    "/"+id, {
+			access_token: access_token
+	    },
+	    function (response) {
+				if (response && !response.error) {
+					var eventName = self.replaceAll(response.name, ' ', '-'),
+							start = new Date(response.start_time),
+							end = new Date(response.end_time);
+					FB.api(
+						id+"/feed", {
+							access_token: access_token,
+							fields: 'message, type, updated_time',
+							limit: 5000
+						},
+						function (data) {
+							if (data && !data.error) {
+						      var nameList = self.filterMessages(data, self.checkDate(end, start));
+									jsPDFEditor.init(nameList, eventName);
+							} else {
+								self.errorMessage();
+							}
+						}
 					);
 				} else {
-		        	self.errorMessage();
+					self.errorMessage();
 				}
-		    }
+			}
 		)
 	},
 

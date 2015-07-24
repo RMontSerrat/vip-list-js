@@ -43,11 +43,11 @@ var jsPDFEditor = {
 	 * Starts the Download of the PDF
 	 * @return {boolean}
 	*/
-	initDownloadPDF: function initDownloadPDF() {
+	initDownloadPDF: function initDownloadPDF(eventName) {
 		progress = 1;
 		eval('try{' + editor.getValue() + '} catch(e) { console.error(e.message,e.stack,e); }'); 
 
-		var file = 'demo';
+		var file = eventName+"_Nomes-do-Mural";
 		if (typeof doc !== 'undefined') {
 			doc.save(file + '.pdf');
 		} else if (typeof pdf !== 'undefined') {
@@ -64,7 +64,7 @@ var jsPDFEditor = {
 	 * Start the editor demo
 	 * @return {void}
 	*/
-	init: function init(array) {
+	init: function init(array, eventName) {
 
 		// Init the ACE editor
 		this.aceEditor();
@@ -72,6 +72,6 @@ var jsPDFEditor = {
 		this.pdf(array);
 		// Do the first update on init
 
-		this.initDownloadPDF();
+		this.initDownloadPDF(eventName);
 	}
 };
