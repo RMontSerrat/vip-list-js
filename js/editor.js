@@ -6,6 +6,10 @@ var jsPDFEditor = {
 
 	editor: {},
 
+	/**
+	 * Builds the editor
+	 * @return {void}
+	*/
 	aceEditor: function aceEditor() {
 		editor = ace.edit("editor");
 		editor.setTheme("ace/theme/github");
@@ -13,13 +17,17 @@ var jsPDFEditor = {
 		editor.getSession().setUseWorker(false); // prevent "SecurityError: DOM Exception 18"
 	},
 
+	/**
+	 * Builds the file
+	 * @return {void}
+	*/
 	pdf: function pdf(array) {
 		var source = "var doc = new jsPDF(); doc.setFontSize(10);\n",
 			x = 10,
 			y = 10;
 		for(var i = 0; i <= array.length; i++) {
 			if(array[i]) {
-				if(y%290 == 0) {
+				if(y % 290 == 0) {
 					source += "doc.addPage();\n";
 					y = 10;
 				}
@@ -31,6 +39,10 @@ var jsPDFEditor = {
 		editor.gotoLine(0);
 	},
 
+	/**
+	 * Starts the Download of the PDF
+	 * @return {boolean}
+	*/
 	initDownloadPDF: function initDownloadPDF() {
 		progress = 1;
 		eval('try{' + editor.getValue() + '} catch(e) { console.error(e.message,e.stack,e); }'); 
@@ -51,7 +63,7 @@ var jsPDFEditor = {
 	/**
 	 * Start the editor demo
 	 * @return {void}
-	 */
+	*/
 	init: function init(array) {
 
 		// Init the ACE editor

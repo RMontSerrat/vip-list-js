@@ -1,5 +1,10 @@
 var vip = {
-	countSpaces: function countSpaces(string) {
+
+	/**
+	 * Number spaces of a word
+	 * @return {integer}
+	*/
+	numberSpaces: function numberSpaces(string) {
 		var count = 0;
 		for(var i = 0; i < string.length; i++) {
 			if(string.charAt(i) === ' ')  {
@@ -9,30 +14,47 @@ var vip = {
 		return count;
 	},
 
+	/**
+	 * Number spaces of a word
+	 * @return {integer}
+	*/
 	eventId: function eventId(link) {
 		var numberPattern = /\d+/g,
-		id = link.match(numberPattern);
+			id = link.match(numberPattern);
+
 		return id;
 	},
 
+	/**
+	 * transforms the global variable 'invalid' false and returns error message
+	 * @return {void}
+	*/
 	errorMessage: function errorMessage(msg) {
 		invalid = true;
 	},
 
-	removeAcento: function removeAcento(strToReplace) {
-	    str_acento = "áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÖÔÚÙÛÜÇ";
-	    str_sem_acento = "aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC";
-	    var nova = "";
+	/**
+	 * remove the accents of a word
+	 * @return {string}
+	*/
+	removeaccent: function removeaccent(strToReplace) {
+	    str_accent = "áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÖÔÚÙÛÜÇ";
+	    str_no_accent = "aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC";
+	    var newWord = "";
 	    for (var i = 0; i < strToReplace.length; i++) {
-	        if (str_acento.indexOf(strToReplace.charAt(i)) != -1) {
-	            nova += str_sem_acento.substr(str_acento.search(strToReplace.substr(i, 1)), 1);
+	        if (str_accent.indexOf(strToReplace.charAt(i)) != -1) {
+	            newWord += str_sem_accent.substr(str_accent.search(strToReplace.substr(i, 1)), 1);
 	        } else {
-	            nova += strToReplace.substr(i, 1);
+	            newWord += strToReplace.substr(i, 1);
 	        }
 	    }
-	    return nova;
+	    return newWord;
 	},
 
+	/**
+	 * remove the special caracteres of a word
+	 * @return {string}
+	*/
 	specialCaracteres: function specialCaracteres(text) {
 		if(text.length > 0) {
 			var length = text.length-1,
@@ -53,22 +75,29 @@ var vip = {
 	    }
 	},
 
+	/**
+	 * remove the special caracteres of a word
+	 * @return {void}
+	*/
 	titleize: function titleize(text) {
 	    var words = text.toLowerCase().split(" ");
 	    for (var a = 0; a < words.length; a++) {
-        	words[a] = this.specialCaracteres(this.removeAcento(words[a]));
+			words[a] = this.specialCaracteres(this.removeaccent(words[a]));
 	        var w = words[a] || [];
 	        if(w[0]) {
 		        words[a] = w[0].toUpperCase() + w.slice(1);
 	        }
-
 	    }
 	    return words.join(" ");
 	},
 
+	/**
+	 * algorithm to filter the event wall posts and detect what is a name and what is not
+	 * @return {array}
+	*/
 	filterMessages: function filterMessages(response) {
 		var self = this,
-			array = [];
+			nameList = [];
 		response.data.forEach(function(data) {
     		if(data.message !== undefined && data.type === "status") {
 	        	var split;
@@ -78,16 +107,20 @@ var vip = {
 	        		split = data.message.split(',');
 	        	}
         		split.forEach(function(word) {
-		        	if(self.countSpaces(word) > 0 && self.countSpaces(word) <= 4 && word.length <= 30) {
+					if(self.numberSpaces(word) > 0 && self.numberSpaces(word) <= 4 && word.length <= 30) {
         				word = self.titleize(word);
-				        array = array.concat(word.trim());
+				        nameList = nameList.concat(word.trim());
         			}
         		});
     		}
 		});
-		return array.sort();
+		return nameList.sort();
 	},
 
+	/**
+	 * get the Access Token of the facebook
+	 * @return {string}
+	*/
 	getAccessToken: function getAccessToken() {
     	var url = "https://graph.facebook.com/v2.3/oauth/access_token?client_id=1553906604861504&client_secret=937e3f0fb78250c0cd69634e84f7d21f&grant_type=client_credentials&method=get&pretty=0&sdk=joey",
 	    	xmlHttp = new XMLHttpRequest();
@@ -98,6 +131,10 @@ var vip = {
 	    return JSON.parse(xmlHttp.responseText).access_token;
 	},
 
+	/**
+	 * get the event posts
+	 * @return {void}
+	*/
     list: function list(event) {
 		var self = this,
 			access_token = self.getAccessToken(),
@@ -114,8 +151,8 @@ var vip = {
 		    },
 		    function (response) {
 		      	if (response && !response.error) {
-			        var array = self.filterMessages(response);
-					jsPDFEditor.init(array);
+			        var nameList = self.filterMessages(response);
+					jsPDFEditor.init(nameList);
 				} else {
 		        	self.errorMessage();
 				}
@@ -123,6 +160,10 @@ var vip = {
 		);
 	},
 
+	/**
+	 * Starts functions
+	 * @return {void}
+	*/
     init: function init() {
     	var self = this;
     	document.body.querySelector('.button-submit').onclick = function(e) {
