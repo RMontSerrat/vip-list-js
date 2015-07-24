@@ -1,4 +1,4 @@
-var vip = {
+	var vip = {
 
 	/**
 	 * Number spaces of a word
@@ -43,7 +43,7 @@ var vip = {
 	    var newWord = "";
 	    for (var i = 0; i < strToReplace.length; i++) {
 	        if (str_accent.indexOf(strToReplace.charAt(i)) != -1) {
-	            newWord += str_sem_accent.substr(str_accent.search(strToReplace.substr(i, 1)), 1);
+	            newWord += str_no_accent.substr(str_accent.search(strToReplace.substr(i, 1)), 1);
 	        } else {
 	            newWord += strToReplace.substr(i, 1);
 	        }
@@ -95,11 +95,18 @@ var vip = {
 	 * algorithm to filter the event wall posts and detect what is a name and what is not
 	 * @return {array}
 	*/
-	filterMessages: function filterMessages(response) {
+	filterMessages: function filterMessages(response, eventLong) {
 		var self = this,
 			nameList = [];
 		response.data.forEach(function(data) {
-    		if(data.message !== undefined && data.type === "status") {
+			if(eventLong) {
+				var today = new Date(),
+				postDate = new Date(data.updated_time);
+				if(self.checkDate(today, postDate)) {
+					return;
+				}
+			}
+			if(data.message !== undefined && data.type === "status") {
 	        	var split;
 	        	if(data.message.indexOf('\n') > -1 && (data.message.indexOf('\n') <= 30 || data.message.indexOf('↵') <= 30)) {
 	        		split = data.message.split('\n');
@@ -131,6 +138,28 @@ var vip = {
 	    return JSON.parse(xmlHttp.responseText).access_token;
 	},
 
+
+	dateDifference: function dateDifference(date1, date2) {
+		// The number of milliseconds in one day
+		var ONE_DAY = 1000 * 60 * 60 * 24
+
+		// Convert both dates to milliseconds
+		var date1_ms = date1.getTime()
+		var date2_ms = date2.getTime()
+
+		// Calculate the difference in milliseconds
+		var difference_ms = Math.abs(date1_ms - date2_ms)
+
+		// Convert back to days and return
+		return Math.round(difference_ms/ONE_DAY)
+	},
+
+	checkDate: function checkDate(date1, date2) {
+		if(this.dateDifference(date1, date2) >= 15) {
+			return true;
+		}
+	},
+
 	/**
 	 * get the event posts
 	 * @return {void}
@@ -143,21 +172,35 @@ var vip = {
         	this.errorMessage();
         	return;
         }
-	    FB.api(
-		    id+"/feed", {
-		    	access_token: access_token,
-		    	fields: 'message, type',
-		    	limit: 5000
+		FB.api(
+		    "/"+id, {
+				access_token: access_token
 		    },
 		    function (response) {
 		      	if (response && !response.error) {
-			        var nameList = self.filterMessages(response);
-					jsPDFEditor.init(nameList);
+							var name = response.name,
+									start = new Date(response.start_time),
+									end = new Date(response.end_time);
+							FB.api(
+								id+"/feed", {
+									access_token: access_token,
+									fields: 'message, type, updated_time',
+									limit: 5000
+								},
+								function (data) {
+									if (data && !data.error) {
+								      var nameList = self.filterMessages(data, self.checkDate(end, start));
+									jsPDFEditor.init(nameList);
+								} else {
+									self.errorMessage();
+								}
+					    }
+					);
 				} else {
 		        	self.errorMessage();
 				}
 		    }
-		);
+		)
 	},
 
 	/**
