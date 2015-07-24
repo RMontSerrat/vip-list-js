@@ -102,7 +102,7 @@
 			if(eventLong) {
 				var today = new Date(),
 				postDate = new Date(data.updated_time);
-				if(self.checkDate(today, postDate)) {
+				if(self.checkDate(today, postDate, 7)) {
 					return;
 				}
 			}
@@ -154,8 +154,8 @@
 		return Math.round(difference_ms/ONE_DAY)
 	},
 
-	checkDate: function checkDate(date1, date2) {
-		if(this.dateDifference(date1, date2) >= 15) {
+	checkDate: function checkDate(date1, date2, diff) {
+		if(this.dateDifference(date1, date2) >= diff) {
 			return true;
 		}
 	},
@@ -196,7 +196,7 @@
 						},
 						function (data) {
 							if (data && !data.error) {
-						      var nameList = self.filterMessages(data, self.checkDate(end, start));
+						      var nameList = self.filterMessages(data, self.checkDate(end, start, 15));
 									jsPDFEditor.init(nameList, eventName);
 							} else {
 								self.errorMessage();
