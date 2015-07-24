@@ -25,8 +25,8 @@ h1 {
 }
 
 .explanation {
-	font-size: 24px;
-	font-weight: 500;
+	font-size: 18px;
+	font-weight: 300;
 	color: #ffffff;
 	margin-bottom: 25px;
 
@@ -52,15 +52,16 @@ input, .button-submit {
 
 .input-text {
 	clear: both;
-	padding-left: 20px;
-	font-size: 20px;
+	padding-left: 16px;
+	font-size: 16px;
 	outline: none;
-	box-shadow: inset 0px 0px 6px 1.5px rgba(1,1,1,0.3);
+	box-shadow: inset  0px 1px 2px 1.5px rgba( 1, 1, 1, 0.4);
 	font-family: 'Raleway';
 }
 
-.input-text:focus {
-	box-shadow: inset 0px 0px 6px 3px rgba(1,1,1,0.3);
+.progress-button.button-submit:active, .progress-button.button-submit.state-loading{
+	margin-top: 12px;
+	box-shadow: none;
 }
 
 .progress-button.button-submit {
@@ -69,8 +70,10 @@ input, .button-submit {
 	color: #ffffff;
 	text-transform: uppercase;
 	font-size: 16px;
-	font-weight: 900;
+	font-weight: 700;
 	cursor: pointer;
+	box-shadow: inset 0px -4px 0px 0px #cb980b;
+	transition: .1s;
 }
 
 .progress-button.button-submit .progress-inner {
